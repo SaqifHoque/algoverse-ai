@@ -1,0 +1,878 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AlgoVerse AI Backend",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Api V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health/model": {
+      "get": {
+        "summary": "Health Model",
+        "operationId": "health_model_api_v1_health_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/submissions": {
+      "post": {
+        "summary": "Create Submission Route",
+        "operationId": "create_submission_route_api_v1_submissions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmissionCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmissionCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/submissions/{submission_id}": {
+      "get": {
+        "summary": "Get Submission Status",
+        "operationId": "get_submission_status_api_v1_submissions__submission_id__get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmissionStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lessons/{lesson_id}": {
+      "get": {
+        "summary": "Get Lesson Route",
+        "operationId": "get_lesson_route_api_v1_lessons__lesson_id__get",
+        "parameters": [
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lesson Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lesson"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/traces/{submission_id}": {
+      "get": {
+        "summary": "Get Trace Route",
+        "operationId": "get_trace_route_api_v1_traces__submission_id__get",
+        "parameters": [
+          {
+            "name": "submission_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Submission Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionTrace"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnimationHint": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "highlight",
+              "swap",
+              "compare",
+              "pointer_move",
+              "push",
+              "pop",
+              "recurse_in",
+              "recurse_out"
+            ],
+            "title": "Kind"
+          },
+          "target_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Target Indices",
+            "default": []
+          },
+          "target_vars": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Target Vars",
+            "default": []
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "description"
+        ],
+        "title": "AnimationHint"
+      },
+      "ExecutionTrace": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "entrypoint": {
+            "type": "string",
+            "title": "Entrypoint"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/TraceStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "final_result": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Final Result"
+          },
+          "stdout": {
+            "type": "string",
+            "title": "Stdout",
+            "default": ""
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "Truncated",
+            "default": false
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "entrypoint",
+          "steps"
+        ],
+        "title": "ExecutionTrace"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Hint": {
+        "properties": {
+          "trigger": {
+            "type": "string",
+            "enum": [
+              "on_request",
+              "on_wrong_answer",
+              "proactive"
+            ],
+            "title": "Trigger"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "related_step_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Related Step Index"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trigger",
+          "text"
+        ],
+        "title": "Hint"
+      },
+      "Lesson": {
+        "properties": {
+          "lesson_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Lesson Id"
+          },
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "algorithm_name": {
+            "type": "string",
+            "enum": [
+              "bubble_sort",
+              "binary_search",
+              "fibonacci_recursive"
+            ],
+            "title": "Algorithm Name"
+          },
+          "source_code": {
+            "type": "string",
+            "title": "Source Code"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced"
+            ],
+            "title": "Difficulty"
+          },
+          "learning_objectives": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Learning Objectives"
+          },
+          "story": {
+            "type": "string",
+            "title": "Story"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/LessonStep"
+            },
+            "type": "array",
+            "title": "Timeline"
+          },
+          "quiz": {
+            "items": {
+              "$ref": "#/components/schemas/QuizQuestion"
+            },
+            "type": "array",
+            "title": "Quiz",
+            "default": []
+          },
+          "hints": {
+            "items": {
+              "$ref": "#/components/schemas/Hint"
+            },
+            "type": "array",
+            "title": "Hints",
+            "default": []
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "complexity_overall": {
+            "type": "string",
+            "title": "Complexity Overall"
+          },
+          "generated_by_model": {
+            "type": "string",
+            "title": "Generated By Model"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "submission_id",
+          "title",
+          "algorithm_name",
+          "source_code",
+          "difficulty",
+          "learning_objectives",
+          "story",
+          "timeline",
+          "summary",
+          "complexity_overall",
+          "generated_by_model",
+          "created_at"
+        ],
+        "title": "Lesson"
+      },
+      "LessonStep": {
+        "properties": {
+          "step_index": {
+            "type": "integer",
+            "title": "Step Index"
+          },
+          "current_line": {
+            "type": "integer",
+            "title": "Current Line"
+          },
+          "highlighted_lines": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Highlighted Lines"
+          },
+          "memory_view": {
+            "$ref": "#/components/schemas/MemoryView"
+          },
+          "narration": {
+            "type": "string",
+            "title": "Narration"
+          },
+          "why_this_happens": {
+            "type": "string",
+            "title": "Why This Happens"
+          },
+          "animation_hints": {
+            "items": {
+              "$ref": "#/components/schemas/AnimationHint"
+            },
+            "type": "array",
+            "title": "Animation Hints",
+            "default": []
+          },
+          "complexity_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complexity Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "step_index",
+          "current_line",
+          "highlighted_lines",
+          "memory_view",
+          "narration",
+          "why_this_happens"
+        ],
+        "title": "LessonStep"
+      },
+      "MemoryVariable": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "value": {
+            "title": "Value"
+          },
+          "changed": {
+            "type": "boolean",
+            "title": "Changed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "MemoryVariable"
+      },
+      "MemoryView": {
+        "properties": {
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/MemoryVariable"
+            },
+            "type": "array",
+            "title": "Variables"
+          },
+          "call_stack": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Call Stack"
+          }
+        },
+        "type": "object",
+        "required": [
+          "variables",
+          "call_stack"
+        ],
+        "title": "MemoryView"
+      },
+      "ModelStatusResponse": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "const": "ollama",
+            "title": "Provider",
+            "default": "ollama"
+          },
+          "model_tag": {
+            "type": "string",
+            "title": "Model Tag"
+          },
+          "reachable": {
+            "type": "boolean",
+            "title": "Reachable"
+          },
+          "total_ram_gb": {
+            "type": "number",
+            "title": "Total Ram Gb"
+          },
+          "selection_reason": {
+            "type": "string",
+            "title": "Selection Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_tag",
+          "reachable",
+          "total_ram_gb",
+          "selection_reason"
+        ],
+        "title": "ModelStatusResponse"
+      },
+      "QuizQuestion": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Choices"
+          },
+          "correct_index": {
+            "type": "integer",
+            "title": "Correct Index"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "choices",
+          "correct_index",
+          "explanation"
+        ],
+        "title": "QuizQuestion"
+      },
+      "SubmissionCreateRequest": {
+        "properties": {
+          "source_code": {
+            "type": "string",
+            "maxLength": 20000,
+            "title": "Source Code"
+          },
+          "entrypoint": {
+            "type": "string",
+            "title": "Entrypoint"
+          },
+          "algorithm_name": {
+            "type": "string",
+            "enum": [
+              "bubble_sort",
+              "binary_search",
+              "fibonacci_recursive"
+            ],
+            "title": "Algorithm Name"
+          },
+          "args": {
+            "items": {},
+            "type": "array",
+            "title": "Args"
+          },
+          "language": {
+            "type": "string",
+            "const": "python",
+            "title": "Language",
+            "default": "python"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced"
+            ],
+            "title": "Difficulty",
+            "default": "beginner"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_code",
+          "entrypoint",
+          "algorithm_name"
+        ],
+        "title": "SubmissionCreateRequest"
+      },
+      "SubmissionCreateResponse": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "lesson_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lesson Id"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status"
+        ],
+        "title": "SubmissionCreateResponse"
+      },
+      "SubmissionStatusResponse": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "submission_id",
+          "status"
+        ],
+        "title": "SubmissionStatusResponse"
+      },
+      "TraceStep": {
+        "properties": {
+          "step_index": {
+            "type": "integer",
+            "title": "Step Index"
+          },
+          "event": {
+            "type": "string",
+            "enum": [
+              "call",
+              "line",
+              "return",
+              "exception"
+            ],
+            "title": "Event"
+          },
+          "line_no": {
+            "type": "integer",
+            "title": "Line No"
+          },
+          "function_name": {
+            "type": "string",
+            "title": "Function Name"
+          },
+          "locals": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Locals"
+          },
+          "call_stack": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Call Stack"
+          },
+          "return_value": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Return Value"
+          },
+          "exception": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exception"
+          }
+        },
+        "type": "object",
+        "required": [
+          "step_index",
+          "event",
+          "line_no",
+          "function_name",
+          "locals",
+          "call_stack"
+        ],
+        "title": "TraceStep"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

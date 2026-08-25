@@ -1,0 +1,8 @@
+{
+  "source_code": "def bubble_sort(items):\n    n = len(items)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if items[j] > items[j + 1]:\n                items[j], items[j + 1] = items[j + 1], items[j]\n    return items\n",
+  "entrypoint": "bubble_sort",
+  "algorithm_name": "bubble_sort",
+  "args": [[5, 3, 1, 4, 2]],
+  "language": "python",
+  "difficulty": "beginner"
+}

@@ -1,0 +1,712 @@
+{
+  "lesson_id": "71a5602c-e629-430a-8d5b-1970d9ddd2f1",
+  "submission_id": "cdd9342e-164a-4f10-aa7d-cf88328cbeeb",
+  "title": "The Magical Library Search",
+  "algorithm_name": "binary_search",
+  "difficulty": "beginner",
+  "learning_objectives": [
+    "Understand how Binary Search works by dividing the search space in half each time.",
+    "Learn why Binary Search is so efficient for sorted lists."
+  ],
+  "story": "Imagine a magical library with books lined up in perfect order from A to Z. The Binary Search algorithm is like a wizard who can quickly find any book by repeatedly dividing the shelf in half and checking the middle book. If the book you're looking for is alphabetically before the middle book, the wizard knows to look in the left half of the shelf. If it's after, the wizard looks in the right half. This process repeats until the book is found or the shelf is empty.",
+  "timeline": [
+    {
+      "step_index": 0,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The function `binary_search` is called with the list `[1, 3, 5, 7, 9, 11]` and the target `7`.",
+      "why_this_happens": "The function is invoked to search for the target `7` in the given list.",
+      "animation_hints": [],
+      "complexity_note": null
+    },
+    {
+      "step_index": 2,
+      "current_line": 3,
+      "highlighted_lines": [
+        3
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 0,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The variable `high` is initialized to the last index of the list, which is `5`.",
+      "why_this_happens": "This sets the upper bound for the search range.",
+      "animation_hints": [
+        {
+          "kind": "pointer_move",
+          "target_indices": [
+            0
+          ],
+          "target_vars": [
+            "low"
+          ],
+          "description": "Moving low to 0"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 3,
+      "current_line": 4,
+      "highlighted_lines": [
+        4
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 0,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The while loop begins, checking if `low` is less than or equal to `high`.",
+      "why_this_happens": "This loop continues as long as there is a valid range to search.",
+      "animation_hints": [],
+      "complexity_note": null
+    },
+    {
+      "step_index": 5,
+      "current_line": 6,
+      "highlighted_lines": [
+        6
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 0,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 2,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The middle index `mid` is calculated as `(low + high) // 2`, which is `2`.",
+      "why_this_happens": "This divides the search range in half to narrow down the potential location of the target.",
+      "animation_hints": [
+        {
+          "kind": "compare",
+          "target_indices": [
+            2
+          ],
+          "target_vars": [
+            "items"
+          ],
+          "description": "Comparing items[2] against the target"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 6,
+      "current_line": 8,
+      "highlighted_lines": [
+        8
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 0,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 2,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The value at `items[mid]` (which is `5`) is compared to the target `7`.",
+      "why_this_happens": "This comparison determines if the target is in the left half, right half, or if it is the middle element.",
+      "animation_hints": [
+        {
+          "kind": "compare",
+          "target_indices": [
+            2
+          ],
+          "target_vars": [
+            "items"
+          ],
+          "description": "Comparing items[2] against the target"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 8,
+      "current_line": 4,
+      "highlighted_lines": [
+        4
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 2,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The value at `items[mid]` (which is `5`) is compared to the target `7` again.",
+      "why_this_happens": "This comparison determines if the target is in the left half, right half, or if it is the middle element.",
+      "animation_hints": [],
+      "complexity_note": null
+    },
+    {
+      "step_index": 9,
+      "current_line": 5,
+      "highlighted_lines": [
+        5
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 2,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "Executing line 5 in binary_search.",
+      "why_this_happens": "",
+      "animation_hints": [
+        {
+          "kind": "pointer_move",
+          "target_indices": [
+            2
+          ],
+          "target_vars": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "description": "Narrowing range: low=3, high=5, mid=2"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 11,
+      "current_line": 8,
+      "highlighted_lines": [
+        8
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 4,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The value at `items[mid]` (which is `9`) is compared to the target `7`.",
+      "why_this_happens": "This comparison determines if the target is in the left half, right half, or if it is the middle element.",
+      "animation_hints": [
+        {
+          "kind": "compare",
+          "target_indices": [
+            4
+          ],
+          "target_vars": [
+            "items"
+          ],
+          "description": "Comparing items[4] against the target"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 12,
+      "current_line": 11,
+      "highlighted_lines": [
+        11
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 5,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 4,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The variable `high` is updated to `mid - 1`, which is `4`.",
+      "why_this_happens": "This narrows the search range to the left half of the current range.",
+      "animation_hints": [
+        {
+          "kind": "pointer_move",
+          "target_indices": [
+            3
+          ],
+          "target_vars": [
+            "low"
+          ],
+          "description": "Moving low to 3"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 14,
+      "current_line": 5,
+      "highlighted_lines": [
+        5
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 4,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The middle index `mid` is recalculated as `(low + high) // 2`, which is `3`.",
+      "why_this_happens": "This divides the new search range in half to narrow down the potential location of the target.",
+      "animation_hints": [
+        {
+          "kind": "pointer_move",
+          "target_indices": [
+            4
+          ],
+          "target_vars": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "description": "Narrowing range: low=3, high=3, mid=4"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 15,
+      "current_line": 6,
+      "highlighted_lines": [
+        6
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 3,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The value at `items[mid]` (which is `7`) is compared to the target `7`.",
+      "why_this_happens": "This comparison determines if the target is in the left half, right half, or if it is the middle element.",
+      "animation_hints": [
+        {
+          "kind": "compare",
+          "target_indices": [
+            3
+          ],
+          "target_vars": [
+            "items"
+          ],
+          "description": "Comparing items[3] against the target"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 17,
+      "current_line": 7,
+      "highlighted_lines": [
+        7
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "items",
+            "value": [
+              1,
+              3,
+              5,
+              7,
+              9,
+              11
+            ],
+            "changed": false
+          },
+          {
+            "name": "target",
+            "value": 7,
+            "changed": false
+          },
+          {
+            "name": "low",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "high",
+            "value": 3,
+            "changed": false
+          },
+          {
+            "name": "mid",
+            "value": 3,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "binary_search"
+        ]
+      },
+      "narration": "The function returns the index `3`, indicating that the target `7` is found at that position in the list.",
+      "why_this_happens": "This is the base case of the binary search algorithm, where the target is found.",
+      "animation_hints": [],
+      "complexity_note": null
+    }
+  ],
+  "quiz": [
+    {
+      "question": "What happens if the target item is not in the list?",
+      "choices": [
+        "The algorithm returns the index of the target item.",
+        "The algorithm returns -1.",
+        "The algorithm returns the middle item.",
+        "The algorithm repeats indefinitely."
+      ],
+      "correct_index": 1,
+      "explanation": "If the target item is not in the list, Binary Search will eventually return -1 to indicate that the item was not found."
+    },
+    {
+      "question": "How does Binary Search ensure it finds the target item efficiently?",
+      "choices": [
+        "By checking every item in the list.",
+        "By randomly guessing where the item might be.",
+        "By dividing the search space in half each time.",
+        "By using a special formula to calculate the target's position."
+      ],
+      "correct_index": 2,
+      "explanation": "Binary Search ensures efficiency by dividing the search space in half each time, which significantly reduces the number of items that need to be checked."
+    }
+  ],
+  "hints": [
+    {
+      "trigger": "on_request",
+      "text": "Think about how you would find a specific page in a large book. Would you start at the beginning and flip through every page, or would you use the table of contents to quickly locate the page?",
+      "related_step_index": null
+    }
+  ],
+  "summary": "Binary Search is a powerful algorithm for finding an item in a sorted list by repeatedly dividing the list in half. It's like a wizard's quick search through a magical library!",
+  "complexity_overall": "O(n) (heuristic: single loop over input)",
+  "generated_by_model": "qwen2.5-coder:7b",
+  "created_at": "2026-08-25T09:05:12.819148Z",
+  "source_code": "def binary_search(items, target):\n    low = 0\n    high = len(items) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if items[mid] == target:\n            return mid\n        if items[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1\n"
+}

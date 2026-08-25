@@ -1,0 +1,21 @@
+:root {
+  --surface: 255 255 255;
+  --surface-glass: rgba(255, 255, 255, 0.6);
+  --foreground: 15 15 20;
+  --border-glass: rgba(255, 255, 255, 0.3);
+  --accent: 99 102 241;
+  --accent-2: 236 72 153;
+  --radius-lg: 1.25rem;
+  --shadow-glass: 0 8px 32px rgb(0 0 0 / 0.08);
+}
+
+/* next-themes applies/removes this class on <html> (darkMode: "class" in tailwind.config.ts),
+   including resolving "system" preference on load -- no separate prefers-color-scheme
+   media query is needed here. */
+.dark {
+  --surface: 17 17 22;
+  --surface-glass: rgba(24, 24, 30, 0.55);
+  --foreground: 237 237 242;
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --shadow-glass: 0 8px 32px rgb(0 0 0 / 0.35);
+}

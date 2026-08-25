@@ -1,0 +1,475 @@
+{
+  "lesson_id": "bb4bb84d-149f-424b-a972-eec778fd42de",
+  "submission_id": "2d33e1cc-4dea-48a3-9c07-bcfeaa554625",
+  "title": "The Recursive Mirror",
+  "algorithm_name": "fibonacci_recursive",
+  "difficulty": "beginner",
+  "learning_objectives": [
+    "Understand how the Fibonacci sequence is generated using recursion.",
+    "Recognize the exponential growth in recursive function calls without memoization."
+  ],
+  "story": "Imagine a magical mirror that, when you look into it, it shows you not just your reflection, but also a smaller version of itself looking back at you. This smaller mirror does the same, and so on, until you reach a tiny mirror that just shows a small part of itself. Each mirror is a copy of the original, but smaller. The Fibonacci sequence is like a series of these mirrors, each one showing a part of the whole sequence.",
+  "timeline": [
+    {
+      "step_index": 0,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 6,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 6`.",
+      "why_this_happens": "This is the initial call to the function with the input value.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            1
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 1) with {'n': 6}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 9,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 3,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 3`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            4
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 4) with {'n': 3}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 18,
+      "current_line": 3,
+      "highlighted_lines": [
+        3
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 1,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function returns `1`.",
+      "why_this_happens": "The base case is reached where `n` is `1`.",
+      "animation_hints": [
+        {
+          "kind": "recurse_out",
+          "target_indices": [
+            6
+          ],
+          "target_vars": [
+            "return_value"
+          ],
+          "description": "Returning 1 from fibonacci_recursive (depth 6)"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 27,
+      "current_line": 3,
+      "highlighted_lines": [
+        3
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 1,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function returns `1`.",
+      "why_this_happens": "The base case is reached where `n` is `1`.",
+      "animation_hints": [
+        {
+          "kind": "recurse_out",
+          "target_indices": [
+            5
+          ],
+          "target_vars": [
+            "return_value"
+          ],
+          "description": "Returning 1 from fibonacci_recursive (depth 5)"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 36,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 0,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 0`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            5
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 5) with {'n': 0}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 45,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 2,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 2`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            4
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 4) with {'n': 2}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 54,
+      "current_line": 3,
+      "highlighted_lines": [
+        3
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 0,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function returns `0`.",
+      "why_this_happens": "The base case is reached where `n` is `0`.",
+      "animation_hints": [],
+      "complexity_note": null
+    },
+    {
+      "step_index": 63,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 4,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 4`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            2
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 2) with {'n': 4}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 72,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 1,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 1`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            5
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 5) with {'n': 1}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 81,
+      "current_line": 1,
+      "highlighted_lines": [
+        1
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 1,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function `fibonacci_recursive` is called with `n = 1`.",
+      "why_this_happens": "The function is called recursively with `n - 1` and `n - 2` in the previous step.",
+      "animation_hints": [
+        {
+          "kind": "recurse_in",
+          "target_indices": [
+            4
+          ],
+          "target_vars": [
+            "n"
+          ],
+          "description": "Entering fibonacci_recursive (depth 4) with {'n': 1}"
+        }
+      ],
+      "complexity_note": null
+    },
+    {
+      "step_index": 90,
+      "current_line": 2,
+      "highlighted_lines": [
+        2
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 1,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive",
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function checks if `n` is less than or equal to `1`.",
+      "why_this_happens": "The function needs to determine if it should return `n` or continue with the recursive calls.",
+      "animation_hints": [],
+      "complexity_note": null
+    },
+    {
+      "step_index": 99,
+      "current_line": 4,
+      "highlighted_lines": [
+        4
+      ],
+      "memory_view": {
+        "variables": [
+          {
+            "name": "n",
+            "value": 6,
+            "changed": false
+          }
+        ],
+        "call_stack": [
+          "fibonacci_recursive"
+        ]
+      },
+      "narration": "The function returns `8`.",
+      "why_this_happens": "The recursive calls have completed, and the final result is calculated.",
+      "animation_hints": [
+        {
+          "kind": "recurse_out",
+          "target_indices": [
+            1
+          ],
+          "target_vars": [
+            "return_value"
+          ],
+          "description": "Returning 8 from fibonacci_recursive (depth 1)"
+        }
+      ],
+      "complexity_note": null
+    }
+  ],
+  "quiz": [
+    {
+      "question": "How many times does the function call itself when calculating fibonacci_recursive(3)?",
+      "choices": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correct_index": 1,
+      "explanation": "The function calls itself twice for each step, except for the base cases. For fibonacci_recursive(3), it calls itself twice for fibonacci_recursive(2), and twice for fibonacci_recursive(1), totaling 4 calls."
+    },
+    {
+      "question": "What is the main reason the fibonacci_recursive function is slow?",
+      "choices": [
+        "It uses a lot of memory.",
+        "It has a large input size.",
+        "It makes too many repeated calculations.",
+        "It has a complex algorithm."
+      ],
+      "correct_index": 2,
+      "explanation": "The function makes many repeated calculations because it recalculates the same values multiple times. This is why it has a slow performance for large inputs."
+    }
+  ],
+  "hints": [
+    {
+      "trigger": "on_request",
+      "text": "Think about how many times the function calls itself for each input number.",
+      "related_step_index": null
+    },
+    {
+      "trigger": "on_request",
+      "text": "Consider what happens when the function reaches the base cases.",
+      "related_step_index": null
+    }
+  ],
+  "summary": "The Fibonacci sequence is generated by a recursive function that mirrors itself, creating a series of smaller and smaller mirrors. This leads to a lot of repeated work, which is why the algorithm is so slow for large numbers.",
+  "complexity_overall": "O(2^n) (heuristic: naive recursion, no memoization detected)",
+  "generated_by_model": "qwen2.5-coder:7b",
+  "created_at": "2026-08-25T09:09:28.733573Z",
+  "source_code": "def fibonacci_recursive(n):\n    if n <= 1:\n        return n\n    return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)\n"
+}
