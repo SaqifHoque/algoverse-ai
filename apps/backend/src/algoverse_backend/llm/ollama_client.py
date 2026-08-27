@@ -103,8 +103,20 @@ class OllamaLessonPlanner(LessonPlannerClient):
         metadata: MetadataBlock = self._call_with_retry(
             build_metadata_prompt(ast_info, trace, options, algorithm_name), MetadataBlock
         )
+        # The visualization trace can contain extra call events needed to reconstruct a whole
+        # recursion tree. Narrate only an evenly spaced subset so local models stay fast and
+        # reliable; non-narrated structural frames receive the deterministic fallback below.
+        narration_steps = downsampled
+        if len(downsampled) > options.max_steps:
+            if options.max_steps == 1:
+                narration_steps = [downsampled[0]]
+            else:
+                last = len(downsampled) - 1
+                narration_indices = sorted({round(i * last / (options.max_steps - 1)) for i in range(options.max_steps)})
+                narration_steps = [downsampled[index] for index in narration_indices]
+
         narration_batch: StepNarrationBatch = self._call_with_retry(
-            build_step_narration_prompt(ast_info, downsampled, options, source_code, hints_by_step),
+            build_step_narration_prompt(ast_info, narration_steps, options, source_code, hints_by_step),
             StepNarrationBatch,
         )
         narration_by_index = {n.step_index: n for n in narration_batch.steps}
