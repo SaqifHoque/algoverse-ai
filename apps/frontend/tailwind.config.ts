@@ -20,7 +20,7 @@ const config: Config = {
         glass: "var(--shadow-glass)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

@@ -3,9 +3,11 @@
 Turn any Python algorithm into a beautiful, interactive, AI-narrated lesson — entirely with
 local AI (Ollama). No paid APIs, no cloud LLM calls, ever.
 
-This repo currently implements a **vertical slice**: one fully working, polished pipeline for
-three algorithms (Bubble Sort, Binary Search, recursive Fibonacci), proven end to end, rather
-than a broad scaffold of every feature in the long-term product vision. See
+This repo includes a beginner curriculum of **103 runnable exercises across 14 separate
+data-structure and algorithm modules**, plus one fully working visualization pipeline for
+arbitrary Python solutions. Bubble Sort, Binary Search, and recursive Fibonacci have bespoke
+visual metaphors; every other catalog or custom solution uses the trace-driven generic
+variables/call-stack visualizer with locally generated narration. See
 `.claude/plans` history or ask for the original plan for the full roadmap (gamification,
 more languages, more algorithms, learning modes, etc.) — none of that is built yet.
 
@@ -49,6 +51,12 @@ Ollama via `host.docker.internal`.
 make dev   # docker compose up --build: postgres + redis + backend + frontend
 ```
 
+`make dev` copies `apps/backend/.env.example` to `apps/backend/.env` automatically if it's
+missing (docker-compose's `env_file:` directive requires the file to exist, even though the
+values it holds are overridden by `docker-compose.yml`'s own `environment:` block for the
+containerized run). Running `docker compose up` directly instead of via `make dev` skips that
+step — copy the file yourself first if you hit `env file ... not found`.
+
 Then open http://localhost:3000.
 
 ## Backend development
@@ -82,6 +90,38 @@ npm run dev
 the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/binary_search`, or
 `/lessons/fibonacci_recursive` directly. Set it to `false` to talk to a real running backend.
 
+`/dev/preview` renders each Visualizer standalone against the fixtures, independent of the
+submission flow — the lighter alternative to Storybook for reviewing layout/metaphor changes;
+worth upgrading to real Storybook once a 4th+ algorithm makes isolated review pay for itself.
+
+## Mobile app (React Native / Expo)
+
+```bash
+cd apps/mobile
+nvm install 20 && nvm use 20   # Expo SDK 57 needs Node 20+; this repo's shell defaults to 18
+npm install
+npm run start                  # opens Metro; scan the QR code with Expo Go, or press i/a for a simulator
+```
+
+Same vertical slice as web, ported to `expo-router` + React Native, not a wrapper around the
+web build — Framer Motion/GSAP/React Flow don't run in React Native, so all 3 visualizers are
+reimplemented with `react-native-reanimated` (the Bubble Sort swap uses a real scrub-seekable
+shared-value timeline, the same idea as the web's GSAP `.progress()` approach) and the
+recursion visualizer is nested "mirror frame" cards instead of a React Flow graph (no
+maintained RN port exists, and it arguably suits a narrow phone screen better anyway).
+
+`.env` defaults to `EXPO_PUBLIC_USE_FIXTURES=true` for the same zero-backend iteration loop as
+web. A phone can't reach `localhost` on your computer — physical devices need the backend's LAN
+IP set in the in-app Settings screen (gear icon on the home screen); the iOS Simulator and
+Android Emulator get sensible platform-aware defaults automatically.
+
+Voice narration is real (`expo-speech`, no bundled assets needed). Sound effects are still a
+no-op stub with real call sites (unlike voice, SFX need bundled `.mp3` assets that haven't been
+authored yet) — dropping them in later only touches `useSoundEffects.ts`.
+
+Verified via `npx expo export --platform ios` and `--platform android` (full production bundle,
+1600+ modules, zero errors) — a physical device/simulator run is the next real check.
+
 ## Known limitations of this vertical slice
 
 - Synchronous submission (no job queue yet) — a submission blocks on the local model, which can
@@ -89,7 +129,15 @@ the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/bina
   state rather than a bare spinner.
 - Sandboxing is dev/portfolio-grade (AST allowlist + resource-limited subprocess), not hardened
   for hostile multi-tenant use.
-- Only 3 algorithms, Python only, no auth, no XP/badges/gamification, no async job queue —
-  all explicitly deferred, not architecturally blocked.
-- `next@14.2.18` has a known security advisory (see `npm install` output) — worth upgrading to
-  a patched 14.2.x release before any real deployment; not yet bumped in this pass.
+- Python only, no auth, no XP/badges/gamification, and no async job queue. The curriculum has
+  103 runnable lessons, while three algorithms currently have bespoke visual metaphors; the
+  others use the generic execution-trace visualizer.
+- The `swap` animation (Bubble Sort's `Shelf`) is the one visual driven by a real scrub-seekable
+  GSAP timeline (`useGsapStepTimeline`), matching the original design intent — the rest of the
+  visualizers currently lean on Framer Motion's `layout` transitions instead, which are smooth
+  but not independently scrubbable to an arbitrary mid-step point the way the GSAP one is.
+  Worth extending to `compare`/`pointer_move`/recursion transitions if/when that polish matters.
+- `sandbox_timeout_seconds` defaults to 8s specifically because host-level contention (real-time
+  antivirus/EDR scanning intercepting subprocess spawns, observed during development) can add
+  multi-second overhead on top of otherwise-instant algorithm code; the trace step cap is still
+  the primary, fast defense against a genuine infinite loop.
