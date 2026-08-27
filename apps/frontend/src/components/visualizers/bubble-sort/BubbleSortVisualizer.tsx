@@ -10,7 +10,7 @@ export function BubbleSortVisualizer({ currentStep }: VisualizerProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex-1">
-        <Shelf items={items} hints={currentStep.animation_hints} />
+        <Shelf items={items} hints={currentStep.animation_hints} stepKey={currentStep.step_index} />
       </div>
       <p className="pb-2 text-center text-xs text-foreground/40">
         Objects on a shelf -- taller boxes are bigger numbers. Adjacent boxes swap when out of order.
