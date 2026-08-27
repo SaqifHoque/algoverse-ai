@@ -37,7 +37,7 @@ function LessonPlayerInner({ sourceCode }: { sourceCode: string }) {
   }, [isFullscreen]);
 
   return (
-    <div ref={containerRef} className="mx-auto flex max-w-6xl flex-col gap-4 bg-surface p-4 md:p-8">
+    <div ref={containerRef} className="mx-auto flex max-w-7xl flex-col gap-4 bg-surface p-4 md:p-8">
       <div className="flex items-center justify-between">
         <div>
           <Link href="/" className="text-xs text-foreground/40 hover:text-accent">
@@ -51,7 +51,7 @@ function LessonPlayerInner({ sourceCode }: { sourceCode: string }) {
         <ThemeToggle />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
         <div className="flex flex-col gap-4">
           <VisualizerStage />
           <PlaybackControls />
