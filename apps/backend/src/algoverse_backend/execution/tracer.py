@@ -17,21 +17,39 @@ def _truncated_repr(value: Any) -> str:
     return text if len(text) <= _MAX_REPR_LEN else text[:_MAX_REPR_LEN] + "...<truncated>"
 
 
-def safe_value(value: Any, _depth: int = 0) -> Any:
-    """Only JSON-safe primitives/lists/dicts survive intact (bounded size); anything else
-    (or anything nested too deep) degrades to a truncated repr() rather than blowing up
-    the trace payload or failing to serialize."""
+def safe_value(value: Any, _depth: int = 0, _seen: set[int] | None = None) -> Any:
+    """Convert runtime values into a bounded, JSON-safe structural snapshot.
+
+    Simple user-defined nodes are expanded through ``__dict__`` so tree/linked-list objects
+    can be rendered as real structures in the frontend. Depth, item, cycle, and repr limits
+    keep this diagnostic serialization bounded and safe.
+    """
     if isinstance(value, _SAFE_SCALAR_TYPES):
         return value
-    if _depth >= 2:
+    if _depth >= 5:
         return _truncated_repr(value)
+    seen = _seen or set()
+    identity = id(value)
+    if identity in seen:
+        return f"<cycle:{type(value).__name__}>"
+    next_seen = seen | {identity}
     if isinstance(value, (list, tuple)):
-        return [safe_value(v, _depth + 1) for v in list(value)[:_MAX_COLLECTION_ITEMS]]
+        return [safe_value(v, _depth + 1, next_seen) for v in list(value)[:_MAX_COLLECTION_ITEMS]]
     if isinstance(value, dict):
         return {
-            str(k): safe_value(v, _depth + 1)
+            str(k): safe_value(v, _depth + 1, next_seen)
             for k, v in list(value.items())[:_MAX_COLLECTION_ITEMS]
         }
+    try:
+        attributes = vars(value)
+    except TypeError:
+        attributes = None
+    if isinstance(attributes, dict):
+        result: dict[str, Any] = {"__type__": type(value).__name__}
+        for key, item in list(attributes.items())[:_MAX_COLLECTION_ITEMS]:
+            if not str(key).startswith("__"):
+                result[str(key)] = safe_value(item, _depth + 1, next_seen)
+        return result
     return _truncated_repr(value)
 
 
