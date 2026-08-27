@@ -20,13 +20,30 @@ export class ApiError extends Error {
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const baseUrl = resolveBaseUrl();
-  const res = await fetch(`${baseUrl}${path}`, {
-    ...init,
-    headers: { "Content-Type": "application/json", ...init?.headers },
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${baseUrl}${path}`, {
+      ...init,
+      headers: { "Content-Type": "application/json", ...init?.headers },
+      cache: "no-store",
+    });
+  } catch (error) {
+    throw new ApiError(
+      `Cannot reach the local AlgoVerse backend at ${baseUrl}. Start it with “make dev”, then confirm Ollama is running. (${error instanceof Error ? error.message : String(error)})`,
+      0,
+    );
+  }
   if (!res.ok) {
-    const detail = await res.text().catch(() => res.statusText);
+    const raw = await res.text().catch(() => res.statusText);
+    // FastAPI's HTTPException body is {"detail": "..."} -- surface just the message rather
+    // than the raw JSON blob on-screen.
+    let detail = raw;
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed?.detail === "string") detail = parsed.detail;
+    } catch {
+      // not JSON, fall through to the raw text
+    }
     throw new ApiError(detail, res.status);
   }
   return res.json() as Promise<T>;
