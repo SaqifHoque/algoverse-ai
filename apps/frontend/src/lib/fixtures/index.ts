@@ -1,4 +1,4 @@
-import type { Lesson } from "@/types/lesson";
+import type { AlgorithmName, Lesson } from "@/types/lesson";
 
 import bubbleSort from "./data/bubble_sort.lesson.json";
 import binarySearch from "./data/binary_search.lesson.json";
@@ -10,9 +10,22 @@ export const FIXTURES = {
   fibonacci_recursive: fibonacciRecursive as unknown as Lesson,
 } as const;
 
+// "custom" has no captured fixture (it's always live-generated) -- FixtureKey intentionally
+// excludes it so fixture-mode lookups stay type-safe; a "custom" submission in fixture mode
+// falls through to a real API call (see submissionStore.ts).
 export type FixtureKey = keyof typeof FIXTURES;
 
-export const FIXTURE_SOURCE_CODE: Record<FixtureKey, { source_code: string; entrypoint: string; args: unknown[] }> = {
+interface AlgorithmTemplate {
+  source_code: string;
+  entrypoint: string;
+  args: unknown[];
+}
+
+// Starter code shown in the editor for each picker option, keyed by the full AlgorithmName
+// (unlike FIXTURES, this includes "custom"). The entrypoint/args here are just the DEFAULT
+// values pre-filled into the (now user-editable) entrypoint/arguments fields in
+// CodeSubmissionForm -- editing the code no longer silently submits stale values.
+export const FIXTURE_SOURCE_CODE: Record<AlgorithmName, AlgorithmTemplate> = {
   bubble_sort: {
     source_code:
       "def bubble_sort(items):\n    n = len(items)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if items[j] > items[j + 1]:\n                items[j], items[j + 1] = items[j + 1], items[j]\n    return items\n",
@@ -31,4 +44,13 @@ export const FIXTURE_SOURCE_CODE: Record<FixtureKey, { source_code: string; entr
     entrypoint: "fibonacci_recursive",
     args: [6],
   },
+  custom: {
+    source_code: "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target - n in seen:\n            return [seen[target - n], i]\n        seen[n] = i\n    return []\n",
+    entrypoint: "two_sum",
+    args: [[2, 7, 11, 15], 9],
+  },
 };
+
+// The curated example-snippet library used to live here inline; it's now organized as
+// separate per-category modules under src/lib/examples/ (pointers, hashing, searching,
+// sorting, graphs) -- see lib/examples/index.ts for the aggregated EXAMPLE_SNIPPETS.
