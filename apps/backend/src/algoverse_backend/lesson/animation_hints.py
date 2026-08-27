@@ -22,6 +22,39 @@ def derive_animation_hints(
         return _derive_binary_search_hints(source_code, entry_args, steps)
     if algorithm_name == "fibonacci_recursive":
         return _derive_recursion_hints(steps)
+    if algorithm_name == "custom":
+        return _derive_generic_hints(source_code, entry_args, steps)
+    return {step.step_index: [] for step in steps}
+
+
+def _derive_generic_hints(
+    source_code: str, entry_args: list[str], steps: list[TraceStep]
+) -> dict[int, list[AnimationHint]]:
+    """Best-effort structural detection for arbitrary user-submitted code, tried against the
+    same three shape-detectors used for the known algorithms. This is NOT a general code
+    visualizer -- it recognizes the same handful of structural patterns (recursion via
+    call-stack depth, adjacent-subscript compare/swap, low/high/mid binary-search shape)
+    regardless of function/variable naming, and degrades gracefully to no hints (narration and
+    the memory/variables view still work for any code, since those come straight from the
+    execution trace, not from pattern matching) when none of the shapes match."""
+    # Every function call produces exactly one call+return event, so `_derive_recursion_hints`
+    # always returns *something* non-empty even for non-recursive code (a single top-level
+    # call/return pair). Gate on genuine nesting (call_stack depth > 1 somewhere in the trace)
+    # rather than "any hints at all", or recursion hints would always shadow the compare/swap
+    # detectors below for every submission, recursive or not.
+    if any(len(step.call_stack) > 1 for step in steps):
+        recursion_hints = _derive_recursion_hints(steps)
+        if any(recursion_hints.values()):
+            return recursion_hints
+
+    bubble_hints = _derive_bubble_sort_hints(source_code, entry_args, steps)
+    if any(bubble_hints.values()):
+        return bubble_hints
+
+    binary_hints = _derive_binary_search_hints(source_code, entry_args, steps)
+    if any(binary_hints.values()):
+        return binary_hints
+
     return {step.step_index: [] for step in steps}
 
 
