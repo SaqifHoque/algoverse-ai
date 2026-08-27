@@ -57,6 +57,18 @@ async def create_submission_route(
     except UnsafeCodeError as exc:
         await mark_submission_failed(session, submission_id, str(exc))
         raise HTTPException(status_code=400, detail=f"Submitted code is not allowed: {exc}") from exc
+    except SyntaxError as exc:
+        await mark_submission_failed(session, submission_id, str(exc))
+        raise HTTPException(
+            status_code=400,
+            detail=f"Submitted code still has a syntax error after attempting an automatic fix: {exc}",
+        ) from exc
+    except ValueError as exc:
+        # analyze() raises this when `entrypoint` doesn't match any function actually defined
+        # in the submitted source -- the single most common cause of "my code won't run" when
+        # the source was edited without updating the entrypoint field to match.
+        await mark_submission_failed(session, submission_id, str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except (SandboxTimeoutError, SandboxExecutionError) as exc:
         await mark_submission_failed(session, submission_id, str(exc))
         raise HTTPException(status_code=422, detail=f"Execution failed: {exc}") from exc

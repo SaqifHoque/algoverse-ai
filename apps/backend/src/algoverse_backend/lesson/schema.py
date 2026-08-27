@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-AlgorithmName = Literal["bubble_sort", "binary_search", "fibonacci_recursive"]
+AlgorithmName = Literal["bubble_sort", "binary_search", "fibonacci_recursive", "custom"]
 Difficulty = Literal["beginner", "intermediate", "advanced"]
 AnimationKind = Literal[
     "highlight", "swap", "compare", "pointer_move", "push", "pop", "recurse_in", "recurse_out"
