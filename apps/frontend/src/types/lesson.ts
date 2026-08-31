@@ -93,3 +93,25 @@ export interface SubmissionCreateResponse {
   lesson_id: string | null;
   error: string | null;
 }
+
+export interface ProgressBadge {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface LessonProgress {
+  lesson_id: string;
+  completed_at: string;
+  score: number;
+  xp: number;
+}
+
+export interface ProgressSummary {
+  user_id: string;
+  total_xp: number;
+  level: number;
+  completed_lessons: number;
+  badges: ProgressBadge[];
+  lessons: LessonProgress[];
+}

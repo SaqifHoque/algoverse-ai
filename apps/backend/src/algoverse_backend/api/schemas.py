@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Literal
 from uuid import UUID
 
@@ -36,3 +37,30 @@ class ModelStatusResponse(BaseModel):
     reachable: bool
     total_ram_gb: float
     selection_reason: str
+
+
+class LessonCompletionRequest(BaseModel):
+    user_id: UUID
+    score: int = Field(..., ge=0, le=100)
+
+
+class BadgeResponse(BaseModel):
+    id: str
+    name: str
+    description: str
+
+
+class LessonProgressResponse(BaseModel):
+    lesson_id: UUID
+    completed_at: datetime
+    score: int
+    xp: int
+
+
+class ProgressSummaryResponse(BaseModel):
+    user_id: UUID
+    total_xp: int
+    level: int
+    completed_lessons: int
+    badges: list[BadgeResponse]
+    lessons: list[LessonProgressResponse]
