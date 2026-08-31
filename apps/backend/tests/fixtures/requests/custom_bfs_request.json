@@ -1,0 +1,8 @@
+{
+  "source_code": "def bfs(graph, start):\n    visited = [start]\n    queue = [start]\n    order = []\n    while queue:\n        node = queue.pop(0)\n        order.append(node)\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                visited.append(neighbor)\n                queue.append(neighbor)\n    return order\n",
+  "entrypoint": "bfs",
+  "algorithm_name": "custom",
+  "args": [{"A": ["B", "C"], "B": ["A", "D"], "C": ["A", "D"], "D": ["B", "C", "E"], "E": ["D"]}, "A"],
+  "language": "python",
+  "difficulty": "beginner"
+}

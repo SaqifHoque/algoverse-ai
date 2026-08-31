@@ -7,12 +7,20 @@ from algoverse_backend.config import settings
 from algoverse_backend.lesson.schema import Lesson
 
 _redis: redis.Redis = redis.from_url(settings.redis_url, decode_responses=True)
+_LESSON_PIPELINE_VERSION = 3
 
 
 def lesson_cache_key(source_code: str, entrypoint: str, args: list, difficulty: str, model_tag: str) -> str:
     digest = hashlib.sha256(
         json.dumps(
-            {"source_code": source_code, "entrypoint": entrypoint, "args": args, "difficulty": difficulty, "model_tag": model_tag},
+            {
+                "pipeline_version": _LESSON_PIPELINE_VERSION,
+                "source_code": source_code,
+                "entrypoint": entrypoint,
+                "args": args,
+                "difficulty": difficulty,
+                "model_tag": model_tag,
+            },
             sort_keys=True,
         ).encode()
     ).hexdigest()

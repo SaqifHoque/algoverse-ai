@@ -1,0 +1,8 @@
+{
+  "source_code": "def preorder_tree(values, index=0):\n    if index >= len(values) or values[index] is None:\n        return []\n    left = preorder_tree(values, index * 2 + 1)\n    right = preorder_tree(values, index * 2 + 2)\n    return [values[index]] + left + right\n",
+  "entrypoint": "preorder_tree",
+  "algorithm_name": "custom",
+  "args": [[8, 4, 12, 2, 6, 10, 14]],
+  "language": "python",
+  "difficulty": "beginner"
+}

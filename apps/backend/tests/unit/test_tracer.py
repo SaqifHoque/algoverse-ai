@@ -1,6 +1,6 @@
 import textwrap
 
-from algoverse_backend.execution.tracer import ExecutionTracer
+from algoverse_backend.execution.tracer import ExecutionTracer, safe_value
 
 
 def _run_traced(source: str, filename: str, entrypoint: str, args: list, max_steps: int = 200):
@@ -90,3 +90,24 @@ def test_tracer_truncates_when_step_limit_exceeded(tmp_path):
 
     assert tracer.truncated
     assert len(tracer.steps) == 5
+
+
+def test_safe_value_preserves_user_tree_structure_and_bounds_cycles():
+    class Node:
+        def __init__(self, value):
+            self.value = value
+            self.left = None
+            self.right = None
+
+    root = Node(8)
+    root.left = Node(4)
+    root.right = Node(12)
+    root.left.left = root  # deliberately cyclic; serialization must remain bounded
+
+    snapshot = safe_value(root)
+
+    assert snapshot["__type__"] == "Node"
+    assert snapshot["value"] == 8
+    assert snapshot["left"]["value"] == 4
+    assert snapshot["right"]["value"] == 12
+    assert snapshot["left"]["left"] == "<cycle:Node>"

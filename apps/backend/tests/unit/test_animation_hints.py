@@ -60,6 +60,33 @@ def test_binary_search_hints_narrow_toward_target():
     assert any(h.kind == "pointer_move" for h in flat)
 
 
+def test_generic_hints_detect_swap_for_non_recursive_custom_code():
+    # Regression: a single top-level call/return pair (any non-recursive function) must not
+    # be mistaken for recursion just because _derive_recursion_hints always finds *something*.
+    source = (
+        "def reverse_array(items):\n"
+        "    left = 0\n"
+        "    right = len(items) - 1\n"
+        "    while left < right:\n"
+        "        items[left], items[right] = items[right], items[left]\n"
+        "        left += 1\n"
+        "        right -= 1\n"
+        "    return items\n"
+    )
+    trace = run_in_sandbox(uuid.uuid4(), source, "reverse_array", [[1, 2, 3, 4, 5]])
+    hints = derive_animation_hints("custom", source, ["items"], trace.steps)
+    flat = _flat_hints(hints)
+    assert any(h.kind == "swap" for h in flat)
+    assert not any(h.kind in ("recurse_in", "recurse_out") for h in flat)
+
+
+def test_generic_hints_still_detect_real_recursion():
+    trace = run_in_sandbox(uuid.uuid4(), FIBONACCI, "fibonacci_recursive", [5])
+    hints = derive_animation_hints("custom", FIBONACCI, ["n"], trace.steps)
+    flat = _flat_hints(hints)
+    assert any(h.kind == "recurse_in" for h in flat)
+
+
 def test_recursion_hints_are_balanced_in_and_out():
     trace = run_in_sandbox(uuid.uuid4(), FIBONACCI, "fibonacci_recursive", [5])
     hints = derive_animation_hints("fibonacci_recursive", FIBONACCI, ["n"], trace.steps)
