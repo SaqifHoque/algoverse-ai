@@ -37,7 +37,9 @@ export const useSubmissionStore = create<SubmissionState>((set) => ({
     submit: async (params) => {
       set({ status: "running", error: null, algorithmName: params.algorithmName, lessonId: null });
 
-      if (USE_FIXTURES) {
+      // "custom" has no captured fixture -- it always needs a real generation, even in
+      // fixture-mode dev builds that otherwise skip the backend entirely for the 3 known demos.
+      if (USE_FIXTURES && params.algorithmName !== "custom") {
         await new Promise((resolve) => setTimeout(resolve, 600));
         set({ status: "completed", lessonId: params.algorithmName });
         return;

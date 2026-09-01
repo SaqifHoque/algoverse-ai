@@ -26,8 +26,17 @@ export default function SubmissionPendingPage() {
     }
   }, [status, lessonId, router]);
 
+  // Calling router.replace() directly in the render body (rather than an effect) crashes
+  // Next's static prerendering of this route at build time with "ReferenceError: location is
+  // not defined" -- prerendering runs in a Node sandbox with no browser globals, and the
+  // synchronous navigation call reaches code that assumes one exists.
+  useEffect(() => {
+    if (status === "idle") {
+      router.replace("/");
+    }
+  }, [status, router]);
+
   if (status === "idle") {
-    router.replace("/");
     return null;
   }
 

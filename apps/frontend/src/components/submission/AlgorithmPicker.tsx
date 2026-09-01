@@ -8,6 +8,7 @@ const ALGORITHMS: { key: AlgorithmName; label: string; emoji: string }[] = [
   { key: "bubble_sort", label: "Bubble Sort", emoji: "🫧" },
   { key: "binary_search", label: "Binary Search", emoji: "📖" },
   { key: "fibonacci_recursive", label: "Fibonacci (recursive)", emoji: "🪞" },
+  { key: "custom", label: "Custom / Other", emoji: "🧩" },
 ];
 
 export function AlgorithmPicker({

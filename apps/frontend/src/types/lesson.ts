@@ -4,7 +4,7 @@
 // now since both sides are moving fast during this vertical slice; codegen output lands in
 // types/generated/openapi.d.ts and can replace this file's bodies once the schema stabilizes.
 
-export type AlgorithmName = "bubble_sort" | "binary_search" | "fibonacci_recursive";
+export type AlgorithmName = "bubble_sort" | "binary_search" | "fibonacci_recursive" | "custom";
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 export type AnimationKind =
   | "highlight"
