@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from algoverse_backend.db.models import ExecutionTraceRecord, LessonRecord, Submission
+from algoverse_backend.db.models import ExecutionTraceRecord, LessonRecord, Submission, User, UserProgress
 from algoverse_backend.execution.models import ExecutionTrace
 from algoverse_backend.lesson.schema import Lesson
 
@@ -90,3 +90,43 @@ async def get_lesson(session: AsyncSession, lesson_id: UUID) -> Lesson | None:
     if record is None:
         return None
     return Lesson.model_validate(record.lesson_json)
+
+
+async def complete_lesson(
+    session: AsyncSession,
+    *,
+    user_id: UUID,
+    lesson_id: UUID,
+    score: int,
+) -> tuple[UserProgress, LessonRecord] | None:
+    lesson = await session.get(LessonRecord, lesson_id)
+    if lesson is None:
+        return None
+
+    user = await session.get(User, user_id)
+    if user is None:
+        session.add(User(id=user_id, email=None, created_at=datetime.now(UTC)))
+
+    progress = await session.get(UserProgress, (user_id, lesson_id))
+    if progress is None:
+        progress = UserProgress(user_id=user_id, lesson_id=lesson_id)
+        session.add(progress)
+
+    progress.completed_at = progress.completed_at or datetime.now(UTC)
+    progress.score = max(progress.score or 0, score)
+    await session.commit()
+    return progress, lesson
+
+
+async def list_user_progress(
+    session: AsyncSession,
+    user_id: UUID,
+) -> list[tuple[UserProgress, LessonRecord]]:
+    stmt = (
+        select(UserProgress, LessonRecord)
+        .join(LessonRecord, LessonRecord.id == UserProgress.lesson_id)
+        .where(UserProgress.user_id == user_id, UserProgress.completed_at.is_not(None))
+        .order_by(UserProgress.completed_at.desc())
+    )
+    result = await session.execute(stmt)
+    return list(result.tuples())

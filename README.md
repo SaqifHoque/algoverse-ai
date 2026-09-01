@@ -23,6 +23,13 @@ User's Python solution
 The AI never generates HTML or freeform prose meant for direct rendering — only the structured
 `Lesson` JSON. All animation timing/color/easing decisions live in the frontend.
 
+## Progress and rewards
+
+Completing a lesson records the learner's best quiz score and awards XP based on difficulty.
+Progress is idempotent, so replaying a lesson cannot farm XP. Milestones unlock First Steps,
+Perfect Score, Dedicated Learner, and XP Explorer badges. Until authentication is introduced,
+the web client uses a stable anonymous player ID; fixture-mode progress remains in local storage.
+
 ## Prerequisites
 
 - macOS with Homebrew, Docker Desktop
@@ -89,7 +96,7 @@ the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/bina
   state rather than a bare spinner.
 - Sandboxing is dev/portfolio-grade (AST allowlist + resource-limited subprocess), not hardened
   for hostile multi-tenant use.
-- Only 3 algorithms, Python only, no auth, no XP/badges/gamification, no async job queue —
-  all explicitly deferred, not architecturally blocked.
+- Only 3 algorithms, Python only, no auth, and no async job queue. Progress is tied to an
+  anonymous browser profile until authentication is introduced.
 - `next@14.2.18` has a known security advisory (see `npm install` output) — worth upgrading to
   a patched 14.2.x release before any real deployment; not yet bumped in this pass.

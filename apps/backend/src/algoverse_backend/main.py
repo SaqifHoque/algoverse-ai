@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from algoverse_backend.api.routes import health, lessons, submissions, traces
+from algoverse_backend.api.routes import health, lessons, progress, submissions, traces
 from algoverse_backend.config import settings
 from algoverse_backend.db.models import Base
 from algoverse_backend.db.session import engine
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router, prefix="/api/v1")
     app.include_router(submissions.router, prefix="/api/v1")
     app.include_router(lessons.router, prefix="/api/v1")
+    app.include_router(progress.router, prefix="/api/v1")
     app.include_router(traces.router, prefix="/api/v1")
 
     return app
