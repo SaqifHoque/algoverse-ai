@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# JavaScript / TypeScript build output
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Expo / React Native local state
+.expo/
+.expo-shared/
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local configuration and secrets (commit example files instead)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local tooling artifacts
+.algoverse-daily/
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
