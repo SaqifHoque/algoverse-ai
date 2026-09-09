@@ -15,7 +15,7 @@ export function VisualizerStage() {
   const Visualizer = resolveVisualizer(lesson.algorithm_name);
 
   return (
-    <GlassPanel className="h-[420px] overflow-hidden p-4">
+    <GlassPanel className="h-[560px] overflow-hidden p-4">
       <motion.div
         key={lesson.algorithm_name}
         initial={{ opacity: 0 }}
