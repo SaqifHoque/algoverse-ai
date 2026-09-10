@@ -1,6 +1,7 @@
 "use client";
 
 import { clsx } from "clsx";
+import { useEffect, useRef } from "react";
 
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { useLessonPlayerStore } from "@/stores/LessonPlayerContext";
@@ -40,8 +41,38 @@ function QuizItem({ question, index }: { question: QuizQuestion; index: number }
   );
 }
 
-export function QuizPanel({ quiz }: { quiz: QuizQuestion[] }) {
-  if (quiz.length === 0) return null;
+export function QuizPanel({ quiz, onComplete }: { quiz: QuizQuestion[]; onComplete: (score: number) => void }) {
+  const answers = useLessonPlayerStore((s) => s.quizAnswers);
+  const reported = useRef(false);
+
+  useEffect(() => {
+    if (reported.current || quiz.length === 0 || Object.keys(answers).length < quiz.length) return;
+    const correct = quiz.filter((question, index) => answers[index] === question.correct_index).length;
+    reported.current = true;
+    onComplete(Math.round((correct / quiz.length) * 100));
+  }, [answers, onComplete, quiz]);
+
+  if (quiz.length === 0) {
+    return (
+      <GlassPanel className="flex items-center justify-between gap-4 p-4">
+        <div>
+          <h3 className="font-medium">Lesson complete?</h3>
+          <p className="text-sm text-foreground/60">Record your progress and collect the lesson XP.</p>
+        </div>
+        <button
+          className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white"
+          onClick={() => {
+            if (!reported.current) {
+              reported.current = true;
+              onComplete(0);
+            }
+          }}
+        >
+          Complete lesson
+        </button>
+      </GlassPanel>
+    );
+  }
   return (
     <GlassPanel className="space-y-4 p-4">
       <h3 className="text-xs font-semibold uppercase tracking-wide text-foreground/50">Quiz</h3>

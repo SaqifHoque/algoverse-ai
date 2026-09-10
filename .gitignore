@@ -1,0 +1,64 @@
+# Operating-system and editor metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.pid
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# JavaScript and TypeScript dependencies/build output (all workspaces/apps)
+**/node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
+.yarn/unplugged/
+.next/
+.nuxt/
+.expo/
+dist/
+build/
+out/
+coverage/
+.turbo/
+.parcel-cache/
+*.tsbuildinfo
+next-env.d.ts
+
+# Python environments, caches, and packaging output
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Local secrets. Keep safe templates versioned.
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Local AI/editor instructions that are not part of the application
+**/.claude/
+/apps/mobile/AGENTS.md
+/apps/mobile/CLAUDE.md
+
+# Private daily rollout queue, state, and logs
+/.algoverse-daily/

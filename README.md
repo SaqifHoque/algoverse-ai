@@ -7,9 +7,9 @@ This repo includes a beginner curriculum of **103 runnable exercises across 14 s
 data-structure and algorithm modules**, plus one fully working visualization pipeline for
 arbitrary Python solutions. Bubble Sort, Binary Search, and recursive Fibonacci have bespoke
 visual metaphors; every other catalog or custom solution uses the trace-driven generic
-variables/call-stack visualizer with locally generated narration. See
-`.claude/plans` history or ask for the original plan for the full roadmap (gamification,
-more languages, more algorithms, learning modes, etc.) — none of that is built yet.
+data-structure and complete call-tree visualizers with locally generated narration.
+Lesson completion also awards XP and badges. More languages and learning modes remain
+part of the longer-term roadmap.
 
 ## Architecture
 
@@ -24,6 +24,13 @@ User's Python solution
 
 The AI never generates HTML or freeform prose meant for direct rendering — only the structured
 `Lesson` JSON. All animation timing/color/easing decisions live in the frontend.
+
+## Progress and rewards
+
+Completing a lesson records the learner's best quiz score and awards XP based on difficulty.
+Progress is idempotent, so replaying a lesson cannot farm XP. Milestones unlock First Steps,
+Perfect Score, Dedicated Learner, and XP Explorer badges. Until authentication is introduced,
+the web client uses a stable anonymous player ID; fixture-mode progress remains in local storage.
 
 ## Prerequisites
 
@@ -94,34 +101,6 @@ the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/bina
 submission flow — the lighter alternative to Storybook for reviewing layout/metaphor changes;
 worth upgrading to real Storybook once a 4th+ algorithm makes isolated review pay for itself.
 
-## Mobile app (React Native / Expo)
-
-```bash
-cd apps/mobile
-nvm install 20 && nvm use 20   # Expo SDK 57 needs Node 20+; this repo's shell defaults to 18
-npm install
-npm run start                  # opens Metro; scan the QR code with Expo Go, or press i/a for a simulator
-```
-
-Same vertical slice as web, ported to `expo-router` + React Native, not a wrapper around the
-web build — Framer Motion/GSAP/React Flow don't run in React Native, so all 3 visualizers are
-reimplemented with `react-native-reanimated` (the Bubble Sort swap uses a real scrub-seekable
-shared-value timeline, the same idea as the web's GSAP `.progress()` approach) and the
-recursion visualizer is nested "mirror frame" cards instead of a React Flow graph (no
-maintained RN port exists, and it arguably suits a narrow phone screen better anyway).
-
-`.env` defaults to `EXPO_PUBLIC_USE_FIXTURES=true` for the same zero-backend iteration loop as
-web. A phone can't reach `localhost` on your computer — physical devices need the backend's LAN
-IP set in the in-app Settings screen (gear icon on the home screen); the iOS Simulator and
-Android Emulator get sensible platform-aware defaults automatically.
-
-Voice narration is real (`expo-speech`, no bundled assets needed). Sound effects are still a
-no-op stub with real call sites (unlike voice, SFX need bundled `.mp3` assets that haven't been
-authored yet) — dropping them in later only touches `useSoundEffects.ts`.
-
-Verified via `npx expo export --platform ios` and `--platform android` (full production bundle,
-1600+ modules, zero errors) — a physical device/simulator run is the next real check.
-
 ## Known limitations of this vertical slice
 
 - Synchronous submission (no job queue yet) — a submission blocks on the local model, which can
@@ -129,7 +108,7 @@ Verified via `npx expo export --platform ios` and `--platform android` (full pro
   state rather than a bare spinner.
 - Sandboxing is dev/portfolio-grade (AST allowlist + resource-limited subprocess), not hardened
   for hostile multi-tenant use.
-- Python only, no auth, no XP/badges/gamification, and no async job queue. The curriculum has
+- Python only, no auth, and no async job queue. Progress uses an anonymous browser profile. The curriculum has
   103 runnable lessons, while three algorithms currently have bespoke visual metaphors; the
   others use the generic execution-trace visualizer.
 - The `swap` animation (Bubble Sort's `Shelf`) is the one visual driven by a real scrub-seekable
