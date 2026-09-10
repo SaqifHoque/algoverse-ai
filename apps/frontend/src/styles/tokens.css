@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --surface: 255 255 255;
   --surface-glass: rgba(255, 255, 255, 0.6);
   --foreground: 15 15 20;
@@ -13,6 +14,7 @@
    including resolving "system" preference on load -- no separate prefers-color-scheme
    media query is needed here. */
 .dark {
+  color-scheme: dark;
   --surface: 17 17 22;
   --surface-glass: rgba(24, 24, 30, 0.55);
   --foreground: 237 237 242;

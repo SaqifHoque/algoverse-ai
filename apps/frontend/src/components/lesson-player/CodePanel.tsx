@@ -32,8 +32,8 @@ export function CodePanel({
   const highlighted = new Set(highlightedLines);
 
   return (
-    <GlassPanel className="overflow-x-auto p-4">
-      <pre className="font-mono text-sm leading-6">
+    <GlassPanel className="overflow-x-auto p-4 text-foreground">
+      <pre className="font-mono text-sm leading-6 text-foreground">
         {lines.map((line, idx) => {
           const lineNo = idx + 1;
           const isActive = lineNo === currentLine || highlighted.has(lineNo);
@@ -53,6 +53,7 @@ export function CodePanel({
                     className={clsx(
                       tok.kind === "keyword" && "text-accent-2 font-semibold",
                       tok.kind === "number" && "text-accent",
+                      tok.kind === "plain" && "text-foreground",
                     )}
                   >
                     {tok.text}

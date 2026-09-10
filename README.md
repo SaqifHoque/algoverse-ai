@@ -3,11 +3,13 @@
 Turn any Python algorithm into a beautiful, interactive, AI-narrated lesson — entirely with
 local AI (Ollama). No paid APIs, no cloud LLM calls, ever.
 
-This repo currently implements a **vertical slice**: one fully working, polished pipeline for
-three algorithms (Bubble Sort, Binary Search, recursive Fibonacci), proven end to end, rather
-than a broad scaffold of every feature in the long-term product vision. See
-`.claude/plans` history or ask for the original plan for the full roadmap (gamification,
-more languages, more algorithms, learning modes, etc.) — none of that is built yet.
+This repo includes a beginner curriculum of **103 runnable exercises across 14 separate
+data-structure and algorithm modules**, plus one fully working visualization pipeline for
+arbitrary Python solutions. Bubble Sort, Binary Search, and recursive Fibonacci have bespoke
+visual metaphors; every other catalog or custom solution uses the trace-driven generic
+data-structure and complete call-tree visualizers with locally generated narration.
+Lesson completion also awards XP and badges. More languages and learning modes remain
+part of the longer-term roadmap.
 
 ## Architecture
 
@@ -56,6 +58,12 @@ Ollama via `host.docker.internal`.
 make dev   # docker compose up --build: postgres + redis + backend + frontend
 ```
 
+`make dev` copies `apps/backend/.env.example` to `apps/backend/.env` automatically if it's
+missing (docker-compose's `env_file:` directive requires the file to exist, even though the
+values it holds are overridden by `docker-compose.yml`'s own `environment:` block for the
+containerized run). Running `docker compose up` directly instead of via `make dev` skips that
+step — copy the file yourself first if you hit `env file ... not found`.
+
 Then open http://localhost:3000.
 
 ## Backend development
@@ -89,6 +97,10 @@ npm run dev
 the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/binary_search`, or
 `/lessons/fibonacci_recursive` directly. Set it to `false` to talk to a real running backend.
 
+`/dev/preview` renders each Visualizer standalone against the fixtures, independent of the
+submission flow — the lighter alternative to Storybook for reviewing layout/metaphor changes;
+worth upgrading to real Storybook once a 4th+ algorithm makes isolated review pay for itself.
+
 ## Known limitations of this vertical slice
 
 - Synchronous submission (no job queue yet) — a submission blocks on the local model, which can
@@ -96,7 +108,15 @@ the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/bina
   state rather than a bare spinner.
 - Sandboxing is dev/portfolio-grade (AST allowlist + resource-limited subprocess), not hardened
   for hostile multi-tenant use.
-- Only 3 algorithms, Python only, no auth, and no async job queue. Progress is tied to an
-  anonymous browser profile until authentication is introduced.
-- `next@14.2.18` has a known security advisory (see `npm install` output) — worth upgrading to
-  a patched 14.2.x release before any real deployment; not yet bumped in this pass.
+- Python only, no auth, and no async job queue. Progress uses an anonymous browser profile. The curriculum has
+  103 runnable lessons, while three algorithms currently have bespoke visual metaphors; the
+  others use the generic execution-trace visualizer.
+- The `swap` animation (Bubble Sort's `Shelf`) is the one visual driven by a real scrub-seekable
+  GSAP timeline (`useGsapStepTimeline`), matching the original design intent — the rest of the
+  visualizers currently lean on Framer Motion's `layout` transitions instead, which are smooth
+  but not independently scrubbable to an arbitrary mid-step point the way the GSAP one is.
+  Worth extending to `compare`/`pointer_move`/recursion transitions if/when that polish matters.
+- `sandbox_timeout_seconds` defaults to 8s specifically because host-level contention (real-time
+  antivirus/EDR scanning intercepting subprocess spawns, observed during development) can add
+  multi-second overhead on top of otherwise-instant algorithm code; the trace step cap is still
+  the primary, fast defense against a genuine infinite loop.

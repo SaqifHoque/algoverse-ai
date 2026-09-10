@@ -4,6 +4,7 @@ bootstrap-ollama:
 	./apps/backend/scripts/bootstrap_ollama.sh
 
 dev:
+	@test -f apps/backend/.env || cp apps/backend/.env.example apps/backend/.env
 	docker compose up --build
 
 backend-test:
