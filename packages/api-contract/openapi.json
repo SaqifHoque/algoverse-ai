@@ -162,6 +162,96 @@
         }
       }
     },
+    "/api/v1/progress/lessons/{lesson_id}/complete": {
+      "post": {
+        "summary": "Complete Lesson Route",
+        "operationId": "complete_lesson_route_api_v1_progress_lessons__lesson_id__complete_post",
+        "parameters": [
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lesson Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonCompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/progress/{user_id}": {
+      "get": {
+        "summary": "Get Progress Route",
+        "operationId": "get_progress_route_api_v1_progress__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/traces/{submission_id}": {
       "get": {
         "summary": "Get Trace Route",
@@ -248,6 +338,29 @@
           "description"
         ],
         "title": "AnimationHint"
+      },
+      "BadgeResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description"
+        ],
+        "title": "BadgeResponse"
       },
       "ExecutionTrace": {
         "properties": {
@@ -374,7 +487,8 @@
             "enum": [
               "bubble_sort",
               "binary_search",
-              "fibonacci_recursive"
+              "fibonacci_recursive",
+              "custom"
             ],
             "title": "Algorithm Name"
           },
@@ -460,6 +574,57 @@
           "created_at"
         ],
         "title": "Lesson"
+      },
+      "LessonCompletionRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "score"
+        ],
+        "title": "LessonCompletionRequest"
+      },
+      "LessonProgressResponse": {
+        "properties": {
+          "lesson_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Lesson Id"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Completed At"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "xp": {
+            "type": "integer",
+            "title": "Xp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "completed_at",
+          "score",
+          "xp"
+        ],
+        "title": "LessonProgressResponse"
       },
       "LessonStep": {
         "properties": {
@@ -600,6 +765,51 @@
         ],
         "title": "ModelStatusResponse"
       },
+      "ProgressSummaryResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "total_xp": {
+            "type": "integer",
+            "title": "Total Xp"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "completed_lessons": {
+            "type": "integer",
+            "title": "Completed Lessons"
+          },
+          "badges": {
+            "items": {
+              "$ref": "#/components/schemas/BadgeResponse"
+            },
+            "type": "array",
+            "title": "Badges"
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/LessonProgressResponse"
+            },
+            "type": "array",
+            "title": "Lessons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "total_xp",
+          "level",
+          "completed_lessons",
+          "badges",
+          "lessons"
+        ],
+        "title": "ProgressSummaryResponse"
+      },
       "QuizQuestion": {
         "properties": {
           "question": {
@@ -647,7 +857,8 @@
             "enum": [
               "bubble_sort",
               "binary_search",
-              "fibonacci_recursive"
+              "fibonacci_recursive",
+              "custom"
             ],
             "title": "Algorithm Name"
           },
