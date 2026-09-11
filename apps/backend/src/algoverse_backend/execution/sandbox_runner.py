@@ -4,6 +4,7 @@ Writes exactly one line of ExecutionTrace JSON to stdout and nothing else, so th
 parse stdout directly regardless of what the user's code printed (which is captured separately)."""
 
 import contextlib
+import inspect
 import io
 import json
 import sys
@@ -40,9 +41,28 @@ def main() -> None:
             entry_fn = namespace.get(entrypoint)
             if not callable(entry_fn):
                 raise NameError(f"entrypoint '{entrypoint}' not found or not callable")
+            if inspect.iscoroutinefunction(entry_fn) or inspect.isasyncgenfunction(entry_fn):
+                raise TypeError("Async entrypoints are not supported. Submit a synchronous function.")
+            if inspect.isgeneratorfunction(entry_fn):
+                raise TypeError(
+                    "Generator entrypoints are not supported. Return a concrete value instead of yielding."
+                )
             tracer.start()
             try:
                 final_result = entry_fn(*args)
+                # A synchronous wrapper can still return deferred work without executing it.
+                if inspect.isawaitable(final_result) or inspect.isasyncgen(final_result):
+                    if inspect.iscoroutine(final_result):
+                        final_result.close()
+                    raise TypeError(
+                        "Async results are not supported. Return a concrete value from a synchronous function."
+                    )
+                if inspect.isgenerator(final_result):
+                    final_result.close()
+                    raise TypeError(
+                        "Generator results are not supported. Consume the generator inside the function "
+                        "and return a concrete value."
+                    )
             except TraceLimitExceeded:
                 pass
             finally:

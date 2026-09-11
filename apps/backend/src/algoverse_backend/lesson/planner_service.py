@@ -7,6 +7,7 @@ from algoverse_backend.analysis.ast_analyzer import analyze
 from algoverse_backend.cache.redis_client import get_cached_lesson, lesson_cache_key, set_cached_lesson
 from algoverse_backend.config import settings
 from algoverse_backend.db.repositories import save_execution_trace, save_lesson
+from algoverse_backend.execution.models import SandboxExecutionError
 from algoverse_backend.execution.sandbox import run_in_sandbox
 from algoverse_backend.lesson.schema import AlgorithmName, Difficulty, Lesson
 from algoverse_backend.llm.autofix import try_autofix_syntax
@@ -58,6 +59,19 @@ async def generate_lesson_for_submission(
         max_steps=settings.sandbox_max_trace_steps,
     )
     await save_execution_trace(session, submission_id, trace)
+
+    # Keep diagnostic traces, but never turn failed or incomplete execution into a
+    # successful lesson. The submission route maps this error to a failed status / 422.
+    if trace.error is not None:
+        raise SandboxExecutionError(trace.error)
+    if trace.truncated:
+        raise SandboxExecutionError(
+            "Execution reached the trace step limit. Use a smaller input or check for an infinite loop."
+        )
+    if not trace.steps:
+        raise SandboxExecutionError(
+            "No execution steps were recorded. Use a synchronous Python function defined in the submitted code."
+        )
 
     ast_info = analyze(source_code, entrypoint)
 

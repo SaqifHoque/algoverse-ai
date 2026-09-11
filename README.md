@@ -25,6 +25,26 @@ User's Python solution
 The AI never generates HTML or freeform prose meant for direct rendering — only the structured
 `Lesson` JSON. All animation timing/color/easing decisions live in the frontend.
 
+## Supported custom Python submissions
+
+Submit a synchronous Python function defined in your source, its entrypoint name, and a
+JSON array of positional arguments. Basic loops, recursion, and data structures are supported;
+this is not a general-purpose Python application runner. Library internals are not traced.
+
+Async and generator entrypoints, and functions returning coroutine/async-generator/generator
+objects, are rejected with an explanatory error. A generator consumed inside a synchronous
+function (for example, `return list(i for i in range(3))`) can still execute normally.
+
+Unhandled runtime errors, missing entrypoints, empty traces, and executions that reach the
+trace step limit return HTTP 422 and mark the submission failed. Diagnostic traces are retained;
+failed runs do not generate or cache a lesson. Handled exceptions and valid `None` returns
+remain supported. For a step-limit error, reduce the input or check for an infinite loop.
+Existing saved lessons are not rewritten; the new cache version prevents reuse of older cached
+lessons during new submissions.
+
+Snapshot fidelity (including visibly marking values larger than the collection limit) is a
+separate follow-up. See [the improvement sequence](docs/improvement-roadmap.md).
+
 ## Progress and rewards
 
 Completing a lesson records the learner's best quiz score and awards XP based on difficulty.
