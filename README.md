@@ -101,6 +101,30 @@ the fast day-to-day iteration loop. Visit `/lessons/bubble_sort`, `/lessons/bina
 submission flow — the lighter alternative to Storybook for reviewing layout/metaphor changes;
 worth upgrading to real Storybook once a 4th+ algorithm makes isolated review pay for itself.
 
+## Mobile app (React Native / Expo)
+
+```bash
+cd apps/mobile
+nvm use 20
+npm ci
+cp .env.example .env
+npm run start
+```
+
+Open the app in a compatible Expo Go client or an iOS/Android development environment.
+The example environment enables fixture-backed Bubble Sort, Binary Search, and recursive
+Fibonacci lessons without a backend. Settings lets you switch fixture mode, theme, voice
+narration, and the backend URL. Custom Python submissions always require the backend.
+
+For a physical device, set the backend URL in Settings to your computer's LAN address,
+including `/api/v1` (for example, `http://192.168.1.10:8000/api/v1`). The iOS simulator and
+Android emulator use platform-specific host defaults. You can also set
+`EXPO_PUBLIC_API_BASE_URL` before starting Expo.
+
+The native lesson player includes playback and gesture controls, code and memory views,
+quizzes, speech narration, and Reanimated visualizers. Sound effects are placeholders pending
+audio assets. Web XP/badge persistence is not yet integrated into the mobile client.
+
 ## Known limitations of this vertical slice
 
 - Synchronous submission (no job queue yet) — a submission blocks on the local model, which can
