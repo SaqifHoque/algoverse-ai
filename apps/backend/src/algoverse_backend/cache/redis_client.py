@@ -7,8 +7,8 @@ from algoverse_backend.config import settings
 from algoverse_backend.lesson.schema import Lesson
 
 _redis: redis.Redis = redis.from_url(settings.redis_url, decode_responses=True)
-# v4 rejects errored, empty and step-limited execution; v3 may have cached those lessons.
-_LESSON_PIPELINE_VERSION = 4
+# v5 carries snapshot limitations and structured set/deque values into lessons.
+_LESSON_PIPELINE_VERSION = 5
 
 
 def lesson_cache_key(source_code: str, entrypoint: str, args: list, difficulty: str, model_tag: str) -> str:

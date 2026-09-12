@@ -70,11 +70,13 @@ def main() -> None:
     except Exception as exc:  # noqa: BLE001 - this boundary must always produce a trace, never crash silently
         error = "".join(traceback.format_exception_only(type(exc), exc)).strip()
 
+    result_snapshot = safe_value(final_result, warnings=tracer.snapshot_warnings) if error is None else None
     trace = ExecutionTrace(
         submission_id=UUID(payload["submission_id"]),
         entrypoint=entrypoint,
         steps=tracer.steps,
-        final_result=safe_value(final_result) if error is None else None,
+        final_result=result_snapshot,
+        snapshot_warnings=sorted(tracer.snapshot_warnings),
         stdout=stdout_buffer.getvalue(),
         truncated=tracer.truncated,
         error=error,
