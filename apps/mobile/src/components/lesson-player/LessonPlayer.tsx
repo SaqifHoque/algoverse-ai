@@ -34,6 +34,15 @@ function LessonPlayerInner() {
           </View>
         )}
 
+        {!!lesson.snapshot_warnings?.length && (
+          <GlassPanel>
+            <Text style={{ color: theme.foreground, fontWeight: "700" }}>Some recorded values are abbreviated</Text>
+            {lesson.snapshot_warnings.map((warning) => (
+              <Text key={warning} style={{ color: theme.foreground }}>{warning}</Text>
+            ))}
+          </GlassPanel>
+        )}
+
         <VisualizerStage />
         <PlaybackControls />
         <NarrationPanel step={currentStep} />

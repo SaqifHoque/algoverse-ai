@@ -13,6 +13,7 @@ class TraceStep(BaseModel):
     call_stack: list[str]
     return_value: Any | None = None
     exception: str | None = None
+    snapshot_warnings: list[str] = []
 
 
 class ExecutionTrace(BaseModel):
@@ -23,6 +24,7 @@ class ExecutionTrace(BaseModel):
     stdout: str = ""
     truncated: bool = False
     error: str | None = None
+    snapshot_warnings: list[str] = []
 
 
 class SandboxExecutionError(Exception):

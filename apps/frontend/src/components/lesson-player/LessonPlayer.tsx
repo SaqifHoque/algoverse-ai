@@ -76,6 +76,15 @@ function LessonPlayerInner({ sourceCode }: { sourceCode: string }) {
         <ThemeToggle />
       </div>
 
+      {!!lesson.snapshot_warnings?.length && (
+        <div role="note" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-foreground">
+          <p className="font-semibold">Some recorded values are abbreviated</p>
+          <ul className="list-inside list-disc">
+            {lesson.snapshot_warnings.map((warning) => <li key={warning}>{warning}</li>)}
+          </ul>
+        </div>
+      )}
+
       <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
         <div className="flex flex-col gap-4">
           <VisualizerStage />

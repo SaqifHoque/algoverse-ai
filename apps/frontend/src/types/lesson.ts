@@ -25,6 +25,7 @@ export interface MemoryVariable {
 export interface MemoryView {
   variables: MemoryVariable[];
   call_stack: string[];
+  snapshot_warnings?: string[];
 }
 
 export interface AnimationHint {
@@ -74,6 +75,7 @@ export interface Lesson {
   complexity_overall: string;
   generated_by_model: string;
   created_at: string;
+  snapshot_warnings?: string[];
 }
 
 export type SubmissionStatus = "pending" | "running" | "completed" | "failed";
