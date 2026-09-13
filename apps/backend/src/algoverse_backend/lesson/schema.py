@@ -20,6 +20,7 @@ class MemoryVariable(BaseModel):
 class MemoryView(BaseModel):
     variables: list[MemoryVariable]
     call_stack: list[str]
+    snapshot_warnings: list[str] = []
 
 
 class AnimationHint(BaseModel):
@@ -69,3 +70,4 @@ class Lesson(BaseModel):
     complexity_overall: str
     generated_by_model: str
     created_at: datetime
+    snapshot_warnings: list[str] = []

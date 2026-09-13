@@ -42,8 +42,20 @@ remain supported. For a step-limit error, reduce the input or check for an infin
 Existing saved lessons are not rewritten; the new cache version prevents reuse of older cached
 lessons during new submissions.
 
-Snapshot fidelity (including visibly marking values larger than the collection limit) is a
-separate follow-up. See [the improvement sequence](docs/improvement-roadmap.md).
+Snapshots preserve list/dictionary shapes and represent sets, frozen sets, and deques as
+`{"__type__": "set", "items": [...]}` (with the corresponding type name). Set order is not
+meaningful; deque order is retained. Snapshots sample at most 50 collection items, 200 text
+characters, five nesting levels, and 1,000 visited values per serialization. These limits
+apply to recorded data, not the original objects being executed.
+
+When data is abbreviated, the trace and lesson carry `snapshot_warnings`; the web and mobile
+players display those warnings above the visualization. Circular references, dictionary-key
+collisions, non-finite numbers, and unsupported text representations are also disclosed.
+This is distinct from exceeding the execution step limit, which fails the submission.
+Old saved lessons default to no warnings and are not retroactively repaired. New cache keys
+ensure fresh submissions use the updated snapshot format.
+
+See [the improvement sequence](docs/improvement-roadmap.md) for remaining trace and renderer work.
 
 ## Progress and rewards
 

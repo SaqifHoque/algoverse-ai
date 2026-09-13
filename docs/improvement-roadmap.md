@@ -6,7 +6,8 @@ follows the custom Python assessment and prioritizes correctness before training
 | Order | PR scope | Validation |
 | --- | --- | --- |
 | 1 | Custom execution reliability: reject unsupported entrypoints/results; fail errored, empty, or step-limited traces before lesson generation; invalidate old lesson cache | Real sandbox execution through the submission HTTP route with storage/model doubles; success regressions |
-| 2 | Trace and snapshot fidelity: explicit value truncation, collection representations, stable references, return/mutation preservation and pre/post-line semantics | Edge-case traces and structural reconstruction tests |
+| 2a | Snapshot fidelity: explicit value truncation, structured sets/deques, bounded serialization, warning propagation to lessons and both players | Snapshot edge cases, real subprocess round trips, legacy schema compatibility and client type checks |
+| 2b | Trace semantics and references: stable identities, return/mutation preservation and pre/post-line semantics | Edge-case traces and structural reconstruction tests |
 | 3 | Conservative complexity analysis: recognize supported patterns and return unknown when evidence is insufficient | Factorial, search, sorting, recursion, built-in operations, and misleading-pattern regressions |
 | 4 | Grounded lesson generation and evaluation: source/trace context, JSON-schema generation, semantic validation, bounded prompts, reviewed corpus and held-out algorithms | Execution, schema, narration/quiz factuality, and latency metrics tracked separately |
 | 5 | Generic visualizer coverage: linked lists, sets/deques, matrices/DP, aliases/cycles, visible limits, explicit structure descriptors | Fixture-based visual and playback checks; generic fallback remains available |
@@ -23,3 +24,7 @@ output as ground truth. Training does not fix execution, trace, or renderer defe
 PR 1 intentionally does not alter the lesson schema or add partial-execution playback. The
 existing clients already display the backend's failure details. Historical saved lessons and
 fixture-mode demos are unchanged; fresh backend submissions receive the new validation.
+
+Snapshot PR 2a adds warning metadata without changing existing list/dict shapes. Rich set/deque
+visual grammars remain in the renderer milestone; memory views currently show their typed
+snapshot objects. Stable references and call-event preservation continue in PR 2b.

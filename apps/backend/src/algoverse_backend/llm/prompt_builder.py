@@ -34,7 +34,9 @@ def build_metadata_prompt(
         f"Function signature: {entry.name}({', '.join(entry.args)})\n"
         f"Static complexity estimate: {ast_info.complexity_hint}\n"
         f"Complexity basis: {ast_info.complexity_basis}\n"
-        f"The function returned: {trace.final_result!r}\n\n"
+        f"The function returned (snapshot, possibly abbreviated): {trace.final_result!r}\n"
+        f"Snapshot limitations: {json.dumps(trace.snapshot_warnings)}. "
+        f"Do not infer missing values or treat partial snapshots as complete results.\n\n"
         f"Use a vivid physical-world metaphor appropriate to this specific algorithm "
         f"(for example: sorting -> objects on a shelf, searching -> flipping through a dictionary, "
         f"recursion -> nested mirrors) in the 'story' field. Keep language simple enough for a "
@@ -63,6 +65,7 @@ def build_step_narration_prompt(
             "event": s.event,
             "function_name": s.function_name,
             "locals": s.locals,
+            "snapshot_warnings": s.snapshot_warnings,
             # Ground truth, computed from the real trace -- not a guess. Base the narration
             # on these detected events (if any) rather than re-deriving them from locals.
             "detected_events": [h.description for h in hints_by_step.get(s.step_index, [])],
@@ -74,6 +77,7 @@ def build_step_narration_prompt(
         f"for a student at the '{options.difficulty}' level. Here are the recorded steps, in order. "
         f"Each step's 'detected_events' field (when non-empty) states exactly what happened at that "
         f"step -- base your narration on it directly rather than re-guessing from 'locals' alone.\n\n"
+        f"Snapshot warnings indicate abbreviated data; do not infer omitted values.\n"
         f"{json.dumps(step_summaries)}\n\n"
         f"{_STEP_SCHEMA_HINT}"
     )

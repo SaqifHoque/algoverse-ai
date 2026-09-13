@@ -132,6 +132,7 @@ class OllamaLessonPlanner(LessonPlannerClient):
                     memory_view=MemoryView(
                         variables=[MemoryVariable(name=k, value=v) for k, v in step.locals.items()],
                         call_stack=step.call_stack,
+                        snapshot_warnings=step.snapshot_warnings,
                     ),
                     narration=narration.narration
                     if narration
@@ -143,6 +144,7 @@ class OllamaLessonPlanner(LessonPlannerClient):
             )
 
         return Lesson(
+            snapshot_warnings=trace.snapshot_warnings,
             lesson_id=uuid4(),
             submission_id=trace.submission_id,
             title=metadata.title,

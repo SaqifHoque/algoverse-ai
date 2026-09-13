@@ -409,6 +409,14 @@
               }
             ],
             "title": "Error"
+          },
+          "snapshot_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Snapshot Warnings",
+            "default": []
           }
         },
         "type": "object",
@@ -555,6 +563,14 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At"
+          },
+          "snapshot_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Snapshot Warnings",
+            "default": []
           }
         },
         "type": "object",
@@ -722,6 +738,14 @@
             },
             "type": "array",
             "title": "Call Stack"
+          },
+          "snapshot_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Snapshot Warnings",
+            "default": []
           }
         },
         "type": "object",
@@ -1031,6 +1055,14 @@
               }
             ],
             "title": "Exception"
+          },
+          "snapshot_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Snapshot Warnings",
+            "default": []
           }
         },
         "type": "object",
