@@ -118,6 +118,8 @@ class ExecutionTracer:
         self.truncated = False
         self.snapshot_warnings: set[str] = set()
         self._call_stack: list[str] = []
+        self._call_ids: list[int] = []
+        self._next_call_id = 0
 
     def start(self) -> None:
         sys.settrace(self._trace_dispatch)
@@ -131,6 +133,8 @@ class ExecutionTracer:
 
         if event == "call":
             self._call_stack.append(frame.f_code.co_name)
+            self._call_ids.append(self._next_call_id)
+            self._next_call_id += 1
 
         if len(self.steps) >= self.max_steps:
             self.truncated = True
@@ -147,6 +151,8 @@ class ExecutionTracer:
                 event=event,  # type: ignore[arg-type]
                 line_no=frame.f_lineno,
                 function_name=frame.f_code.co_name,
+                call_id=self._call_ids[-1] if self._call_ids else None,
+                parent_call_id=self._call_ids[-2] if len(self._call_ids) > 1 else None,
                 locals=locals_snapshot,
                 call_stack=list(self._call_stack),
                 return_value=return_snapshot,
@@ -157,5 +163,6 @@ class ExecutionTracer:
 
         if event == "return" and self._call_stack:
             self._call_stack.pop()
+            self._call_ids.pop()
 
         return self._trace_dispatch

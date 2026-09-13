@@ -6,7 +6,7 @@ import httpx
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
 from algoverse_backend.analysis.models import AstInfo
-from algoverse_backend.execution.models import ExecutionTrace
+from algoverse_backend.execution.models import ExecutionTrace, TraceStep
 from algoverse_backend.lesson.animation_hints import derive_animation_hints
 from algoverse_backend.lesson.downsample import downsample_steps
 from algoverse_backend.lesson.schema import (
@@ -30,6 +30,16 @@ from algoverse_backend.llm.prompt_builder import (
     build_step_narration_prompt,
 )
 from algoverse_backend.llm.validation import parse_as
+
+
+def _fallback_narration(step: TraceStep) -> str:
+    if step.event == "line":
+        return f"About to execute line {step.line_no} in {step.function_name}; variables show the state before this line runs."
+    if step.event == "call":
+        return f"Entering {step.function_name}."
+    if step.event == "exception":
+        return f"An exception occurred in {step.function_name}: {step.exception}. Execution may handle it."
+    return f"Leaving {step.function_name}; inspect the recorded return value or exception state."
 
 
 class MetadataBlock(BaseModel):
@@ -126,6 +136,11 @@ class OllamaLessonPlanner(LessonPlannerClient):
             narration = narration_by_index.get(step.step_index)
             timeline.append(
                 LessonStep(
+                    execution_event=step.event,
+                    call_id=step.call_id,
+                    parent_call_id=step.parent_call_id,
+                    return_value=step.return_value,
+                    exception=step.exception,
                     step_index=step.step_index,
                     current_line=step.line_no,
                     highlighted_lines=[step.line_no],
@@ -136,7 +151,7 @@ class OllamaLessonPlanner(LessonPlannerClient):
                     ),
                     narration=narration.narration
                     if narration
-                    else f"Executing line {step.line_no} in {step.function_name}.",
+                    else _fallback_narration(step),
                     why_this_happens=narration.why_this_happens if narration else "",
                     animation_hints=hints_by_step.get(step.step_index, []),
                     complexity_note=narration.complexity_note if narration else None,

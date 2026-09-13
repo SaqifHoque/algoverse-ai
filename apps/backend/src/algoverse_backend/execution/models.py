@@ -8,6 +8,8 @@ class TraceStep(BaseModel):
     step_index: int
     event: Literal["call", "line", "return", "exception"]
     line_no: int
+    call_id: int | None = None
+    parent_call_id: int | None = None
     function_name: str
     locals: dict[str, Any]
     call_stack: list[str]

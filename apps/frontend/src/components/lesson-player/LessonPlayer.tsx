@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { executionStateLabel } from "@/lib/animation/executionStateLabel";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { CodePanel } from "@/components/lesson-player/CodePanel";
@@ -25,6 +26,7 @@ function LessonPlayerInner({ sourceCode }: { sourceCode: string }) {
   const stepIndex = useLessonPlayerStore((s) => s.stepIndex);
   const isFullscreen = useLessonPlayerStore((s) => s.isFullscreen);
   const currentStep = lesson.timeline[stepIndex]!;
+  const stateLabel = executionStateLabel(currentStep);
   const containerRef = useRef<HTMLDivElement>(null);
   const completionStarted = useRef(false);
   const [reward, setReward] = useState<ProgressSummary | null>(null);
@@ -92,6 +94,7 @@ function LessonPlayerInner({ sourceCode }: { sourceCode: string }) {
           <NarrationPanel step={currentStep} />
         </div>
         <div className="flex flex-col gap-4">
+          {stateLabel && <p className="break-words text-sm text-foreground/70">{stateLabel}</p>}
           <CodePanel
             sourceCode={sourceCode}
             currentLine={currentStep.current_line}

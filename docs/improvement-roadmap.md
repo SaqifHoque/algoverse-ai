@@ -7,7 +7,8 @@ follows the custom Python assessment and prioritizes correctness before training
 | --- | --- | --- |
 | 1 | Custom execution reliability: reject unsupported entrypoints/results; fail errored, empty, or step-limited traces before lesson generation; invalidate old lesson cache | Real sandbox execution through the submission HTTP route with storage/model doubles; success regressions |
 | 2a | Snapshot fidelity: explicit value truncation, structured sets/deques, bounded serialization, warning propagation to lessons and both players | Snapshot edge cases, real subprocess round trips, legacy schema compatibility and client type checks |
-| 2b | Trace semantics and references: stable identities, return/mutation preservation and pre/post-line semantics | Edge-case traces and structural reconstruction tests |
+| 2b | Call/event fidelity: explicit call identities, preserve control events and observed state changes, expose pre-line/return semantics | Recursive/sibling/exception traces, client call-tree tests and bounded narration checks |
+| 2c | Object references: stable object identities and alias/lifetime representation within bounded snapshots | Shared-reference, mutation, cycle, identity-reuse and lifetime tests |
 | 3 | Conservative complexity analysis: recognize supported patterns and return unknown when evidence is insufficient | Factorial, search, sorting, recursion, built-in operations, and misleading-pattern regressions |
 | 4 | Grounded lesson generation and evaluation: source/trace context, JSON-schema generation, semantic validation, bounded prompts, reviewed corpus and held-out algorithms | Execution, schema, narration/quiz factuality, and latency metrics tracked separately |
 | 5 | Generic visualizer coverage: linked lists, sets/deques, matrices/DP, aliases/cycles, visible limits, explicit structure descriptors | Fixture-based visual and playback checks; generic fallback remains available |
@@ -27,4 +28,9 @@ fixture-mode demos are unchanged; fresh backend submissions receive the new vali
 
 Snapshot PR 2a adds warning metadata without changing existing list/dict shapes. Rich set/deque
 visual grammars remain in the renderer milestone; memory views currently show their typed
-snapshot objects. Stable references and call-event preservation continue in PR 2b.
+snapshot objects. Call-event preservation and explicit call IDs continue in PR 2b; object identities and aliases remain in PR 2c.
+
+PR 2b may retain up to the sandbox event cap in a lesson. It preserves observed serialized
+state changes, not mutations hidden by snapshot limits or changes that revert between trace
+events. Call IDs are scoped to one trace. Generator resumptions are distinct traced call
+segments. Narration remains separately bounded. Merge snapshot PR #9 before this stacked PR.

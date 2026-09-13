@@ -55,6 +55,18 @@ This is distinct from exceeding the execution step limit, which fails the submis
 Old saved lessons default to no warnings and are not retroactively repaired. New cache keys
 ensure fresh submissions use the updated snapshot format.
 
+Playback keeps all recorded call, return, and exception events, plus frames where the visible
+local state or snapshot warnings change. Unchanged line frames can still be sampled. The
+sandbox event cap bounds the trace; the separate narration budget limits local-model work.
+Lessons can therefore contain more frames than before, up to the recorded trace length.
+
+Each new lesson step carries `execution_event`, `call_id`, `parent_call_id`, `return_value`,
+and `exception`. Call IDs are unique within a trace and identify traced call segments; a
+consumed generator resuming after a yield creates another segment. They are not object IDs.
+The web call tree uses these IDs and retains its legacy hint-based reader for saved lessons.
+Both players label pre-line state and function exits. Python line events occur **before** the
+highlighted line executes; return events can also occur while an exception unwinds.
+
 See [the improvement sequence](docs/improvement-roadmap.md) for remaining trace and renderer work.
 
 ## Progress and rewards

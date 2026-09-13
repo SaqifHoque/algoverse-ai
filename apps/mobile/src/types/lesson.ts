@@ -34,6 +34,11 @@ export interface AnimationHint {
 }
 
 export interface LessonStep {
+  execution_event?: "call" | "line" | "return" | "exception" | null;
+  call_id?: number | null;
+  parent_call_id?: number | null;
+  return_value?: unknown;
+  exception?: string | null;
   step_index: number;
   current_line: number;
   highlighted_lines: number[];

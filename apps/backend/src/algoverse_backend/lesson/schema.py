@@ -31,6 +31,11 @@ class AnimationHint(BaseModel):
 
 
 class LessonStep(BaseModel):
+    execution_event: Literal["call", "line", "return", "exception"] | None = None
+    call_id: int | None = None
+    parent_call_id: int | None = None
+    return_value: Any | None = None
+    exception: str | None = None
     step_index: int
     current_line: int
     highlighted_lines: list[int]
