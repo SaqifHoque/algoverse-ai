@@ -644,6 +644,65 @@
       },
       "LessonStep": {
         "properties": {
+          "execution_event": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "call",
+                  "line",
+                  "return",
+                  "exception"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Event"
+          },
+          "call_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Id"
+          },
+          "parent_call_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Call Id"
+          },
+          "return_value": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Return Value"
+          },
+          "exception": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exception"
+          },
           "step_index": {
             "type": "integer",
             "title": "Step Index"
@@ -1019,6 +1078,28 @@
           "line_no": {
             "type": "integer",
             "title": "Line No"
+          },
+          "call_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Id"
+          },
+          "parent_call_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Call Id"
           },
           "function_name": {
             "type": "string",

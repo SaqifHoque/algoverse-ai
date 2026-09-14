@@ -64,6 +64,10 @@ def build_step_narration_prompt(
             "source_line": _source_line(s.line_no),
             "event": s.event,
             "function_name": s.function_name,
+            "call_id": s.call_id,
+            "parent_call_id": s.parent_call_id,
+            "return_value": s.return_value,
+            "exception": s.exception,
             "locals": s.locals,
             "snapshot_warnings": s.snapshot_warnings,
             # Ground truth, computed from the real trace -- not a guess. Base the narration
@@ -77,6 +81,9 @@ def build_step_narration_prompt(
         f"for a student at the '{options.difficulty}' level. Here are the recorded steps, in order. "
         f"Each step's 'detected_events' field (when non-empty) states exactly what happened at that "
         f"step -- base your narration on it directly rather than re-guessing from 'locals' alone.\n\n"
+        f"Line events show state BEFORE the source line executes. Call events enter a function; "
+        f"return events leave it (including exception unwinding); exception events may be handled. "
+        f"Do not describe a line assignment as already applied to its own pre-line snapshot.\n"
         f"Snapshot warnings indicate abbreviated data; do not infer omitted values.\n"
         f"{json.dumps(step_summaries)}\n\n"
         f"{_STEP_SCHEMA_HINT}"

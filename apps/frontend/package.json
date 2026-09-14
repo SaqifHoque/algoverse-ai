@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-types": "openapi-typescript ../../packages/api-contract/openapi.json -o src/types/generated/openapi.d.ts"
+    "generate-types": "openapi-typescript ../../packages/api-contract/openapi.json -o src/types/generated/openapi.d.ts",
+    "test:trace": "node --test tests/trace-events.test.cjs"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.1.6",

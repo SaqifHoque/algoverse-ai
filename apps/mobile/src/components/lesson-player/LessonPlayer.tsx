@@ -12,6 +12,7 @@ import { VisualizerStage } from "@/components/visualizers/VisualizerStage";
 import { useLessonPlayback } from "@/hooks/useLessonPlayback";
 import { LessonPlayerProvider, useLessonPlayerStore } from "@/stores/LessonPlayerContext";
 import { useTheme } from "@/theme/ThemeProvider";
+import { executionStateLabel } from "@/lib/animation/executionStateLabel";
 import type { Lesson } from "@/types/lesson";
 
 function LessonPlayerInner() {
@@ -21,6 +22,7 @@ function LessonPlayerInner() {
   const stepIndex = useLessonPlayerStore((s) => s.stepIndex);
   const isFocusMode = useLessonPlayerStore((s) => s.isFocusMode);
   const currentStep = lesson.timeline[stepIndex]!;
+  const stateLabel = executionStateLabel(currentStep);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }} edges={["bottom"]}>
@@ -49,6 +51,7 @@ function LessonPlayerInner() {
 
         {!isFocusMode && (
           <>
+            {stateLabel && <Text style={{ color: theme.foregroundMuted }}>{stateLabel}</Text>}
             <CodePanel
               sourceCode={lesson.source_code}
               currentLine={currentStep.current_line}

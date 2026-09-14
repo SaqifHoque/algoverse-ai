@@ -20,6 +20,30 @@ function shortValue(value: unknown): string {
  * Unlike the old call-stack view, this keeps completed and future sibling calls, producing the
  * complete call tree instead of only the currently active branch. */
 export function buildCallTree(steps: LessonStep[]): VisualCallNode[] {
+  // New lessons carry stable trace call IDs. Keep the depth-based reader below for
+  // previously saved lessons and fixtures that predate this metadata.
+  if (steps.length && steps.every((step) => step.call_id != null && step.execution_event)) {
+    const calls = new Map<number, VisualCallNode>();
+    steps.forEach((step, index) => {
+      const id = step.call_id!;
+      if (step.execution_event === "call") {
+        calls.set(id, {
+          id: `call-${id}`,
+          parentId: step.parent_call_id == null ? null : `call-${step.parent_call_id}`,
+          depth: step.memory_view.call_stack.length,
+          functionName: step.memory_view.call_stack.at(-1) ?? "call",
+          detail: step.memory_view.variables.slice(0, 3)
+            .map((variable) => `${variable.name}=${shortValue(variable.value)}`).join(", "),
+          startStep: index,
+          endStep: null,
+        });
+      } else if (step.execution_event === "return") {
+        const call = calls.get(id);
+        if (call) call.endStep = index;
+      }
+    });
+    return [...calls.values()];
+  }
   const nodes: VisualCallNode[] = [];
   let activeByDepth: string[] = [];
 
